@@ -24,7 +24,7 @@ async function getProduct() {
     try {
         const accessToken = await getAccessToken();
     
-        const response = await axios.get('https://www.wixapis.com/stores/v1/products/df19c1f7-07d8-a265-42f8-e8dfa824cc6e', {
+        const response = await axios.get('https://www.wixapis.com/stores/v1/products/d99d3cc8-bc75-ec47-6c72-f713016f98f3', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               'Content-Type': 'application/json',
