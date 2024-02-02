@@ -2,9 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const port = 400;
-const router = require('./routes/product');
-
-
+const {router,syncRouter} = require('./routes/product')
 const uri = "mongodb+srv://arjit:root@cluster0.oxyudxb.mongodb.net/";
 async function connect() {
   try{
@@ -21,7 +19,9 @@ app.get('/', (req, res) => {
     res.render('home', { name: 'Akashdeep' }); 
 }); 
 
-app.use('/product/',router);
+app.use('/product', router);
+app.use('/sync', syncRouter);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
