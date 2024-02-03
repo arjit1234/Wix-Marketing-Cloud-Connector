@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Products</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+   
+<div class="container mt-3">
+    <div class="row">
+        <div class="col">
+          <h2>Orders</h2>
+        </div>
+        <div class="col-auto">
+            <a href="syncOrder"><button type="button" class="btn btn-success"><i class="fas fa-sync-alt"></i></button></a>
+        </div>
+      </div>                
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Date</th>
+        <th>Customer</th>
+        <th>Payment Status</th>
+        <th>Fulfillment Status</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><%= order.orderId %></td>
+            <td><%= order.date %></td>
+            <td><%= order.customer %></td>
+            <td><%= order.payment_status %></td>
+            <td><%= order.fulfillment %></td>
+          </tr>
+        <% }); %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('../home'); %>
+
+</body>
+</html>

@@ -22,25 +22,61 @@ async function getAccessToken(){
 }
 async function getProduct() {
     try {
-        const accessToken = await getAccessToken();
+        const accessToken = await getAccessToken(); // Replace with your access token retrieval logic
     
-        const response = await axios.get('https://www.wixapis.com/stores/v1/products/d99d3cc8-bc75-ec47-6c72-f713016f98f3', {
+        let allProducts = [];
+        let hasMorePages = true;
+        let offset = 0; // Starting offset for pagination
+    
+        while (hasMorePages) {
+          const response = await axios.post('https://www.wixapis.com/stores/v1/products/query', {
+            limit: 100, // Maximum allowed products per request
+            offset: offset
+          }, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
+              'Content-Type': 'application/json'
+            }
           });
+    
           if (response.status === 200) {
-            return response.data;
-          }  else {
+            const products = response.data.products;
+            allProducts = allProducts.concat(products);
+            hasMorePages = response.data.hasMore;
+            offset += products.length;
+    
+          } else {
             console.error('Failed to fetch products:', response.status, response.statusText);
             throw new Error('Failed to fetch products');
           }
+        }
+        return allProducts;
+    
+      } catch (error) {
+        console.error(error);
+        throw error; // Re-throw the error for proper handling
+      }
+}
+
+async function getOrder() {
+    try {
+        const accessToken = await getAccessToken();
         
-    } catch (error) {
-        console.error(error); // Use console.error for errors
-        throw error; // Re-throw the error to propagate it to the caller
+        const response = await axios.post('https://www.wixapis.com/stores/v2/orders/query', {}, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            }
+          });
+        return response.data;
+
+    }catch(error){
+        console.log(error);
+        throw error;
     }
 }
 
-module.exports = getProduct;
+module.exports = {
+    getProduct : getProduct,
+    getOrder : getOrder
+}
