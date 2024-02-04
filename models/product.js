@@ -13,13 +13,13 @@ const productSchema = new mongoose.Schema({
     SKU:{
         type: String,
         required: false,
-        unique: true,
+        unique: false,
     },
     price:{
         type: Number,
         required: false,
     }
-});
+},{timestamps:true});
 
 const Product = mongoose.model('Product',productSchema);
 

@@ -76,7 +76,44 @@ async function getOrder() {
     }
 }
 
+async function getCollection()
+{
+    try {
+      const accessToken = await getAccessToken();
+
+      let allCollection = [];
+      let hasMorePages = true;
+      let offset = 0;
+
+      while(hasMorePages) {
+        const response = await axios.post('https://www.wixapis.com/stores/v1/collections/query',{
+          limit: 100,
+          offset: offset
+        },{
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (response.status === 200) {
+            const  collections  = response.data.collections;
+            allCollection = allCollection.concat(collections);
+            hasMorePages = response.data.hasMore;
+            offset += collections.length;
+        } else {
+            console.log('Failed to fetch collections:', response.status, response.statusText);
+            throw Error('Failded to fetch collections');
+        }
+        
+      }
+      return allCollection;
+    } catch(console) {
+
+    }
+} 
+
 module.exports = {
     getProduct : getProduct,
-    getOrder : getOrder
+    getOrder : getOrder,
+    collectionResponse : getCollection
 }
