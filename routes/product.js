@@ -1,12 +1,15 @@
 const express = require('express');
-const { getProduct } = require('../middleware/API');
-const Product = require('../models/product')
+const { getProduct,update } = require('../middleware/API');
+const Product = require('../models/product');
 // const flash = require('express-flash');
 // const session = require('express-session');
 // const crypto = require('crypto');
 // const { Console } = require('console');
 const router = express.Router();
 const syncRouter = express.Router();
+const updateProduct = express.Router();
+
+
 // const secretKey = crypto.randomBytes(32).toString('hex');
 
 
@@ -48,14 +51,14 @@ syncRouter.get('', async (req, res) => {
 
             productResults.forEach( async (productData) => {
                 //Ensure productId has 
+                
                 const  existingProduct = await Product.findOne({ productId: productData.id });
                 if (existingProduct) {
-                    //update product 
-
+                    //update product
                     existingProduct.productName = productData.name;
                     existingProduct.SKU = productData.sku;
                     existingProduct.price = productData.price.discountedPrice;
-                    
+                    images: productData.media.image ? productData.media.mainMedia.image.url: '';
                     try {
                         await existingProduct.save();
                         console.log(`Product with productId ${productData.id} is updated`);
@@ -69,7 +72,8 @@ syncRouter.get('', async (req, res) => {
                         productId: productData.id,
                         productName: productData.name,
                         SKU: productData.sku,
-                        price: productData.price.discountedPrice
+                        price: productData.price.discountedPrice,
+                        images: productData.media.image ? productData.media.mainMedia.image.url: '',
                     });
 
                     try {
@@ -86,9 +90,30 @@ syncRouter.get('', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+updateProduct.get('/:id', async (req,res) =>{
+    try { 
+            
+            const prodId= req.params.id;
+            const product_data = {
+                id: req.params.id,
+                name : req.query.productName,
+                price: req.query.productPrice,
+                sku: req.query.productSKU,
+            };
+
+            const update_response = await update(prodId,product_data);
+
+            const productData = await Product.findOne({ productId : prodId });
+        
+            return res.render('products/update', {productData});
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
 module.exports ={
     router : router,
     syncRouter: syncRouter, 
+    updateProduct: updateProduct
 } 

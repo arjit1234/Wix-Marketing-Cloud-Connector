@@ -112,8 +112,36 @@ async function getCollection()
     }
 } 
 
+async function updateproduct(productId,productData) {
+  try {
+     const accessToken = await getAccessToken();
+     const options = {
+      method: 'PATCH',
+      url: `https://www.wixapis.com/stores/v1/products/${productId}`,
+      data: productData, // Assuming productData is a valid JSON object
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    };
+  
+
+    try {
+      const response = await axios(options);
+      console.log(response.data);
+      return response;
+    } catch(error) {
+      console.log(error);
+    }
+     
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
     getProduct : getProduct,
     getOrder : getOrder,
-    collectionResponse : getCollection
+    collectionResponse : getCollection,
+    update: updateproduct
 }

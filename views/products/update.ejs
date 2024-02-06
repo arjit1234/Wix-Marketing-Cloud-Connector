@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/public/js/script.js"></script>
+    <title>Product Update Form</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Product Update</h1>
+        <form id="productForm">
+            <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control" value="<%= productData.productName %>" id="productName" placeholder="Enter product name">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" value="<%= productData.productId%>" id="productId">
+            </div>
+            <div class="mb-3">
+                <label for="productPrice" class="form-label">Price</label>
+                <input type="number" class="form-control" id="productPrice" value="<%= productData.price %>" placeholder="Enter price">
+            </div>
+            <div class="mb-3">
+                <label for="productSKU" class="form-label">SKU</label>
+                <input type="text" class="form-control" id="productSKU" value="<%= productData.SKU %>" placeholder="Enter SKU">
+            </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Image</label>
+                <input type="file" class="form-control" id="imageFile">
+            </div>
+            <button type="submit" class="btn btn-primary" id="updateProductBtn">Update Product</button>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function() {
+    // Handle form submission
+    $('#updateProductBtn').click(function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Get form data
+        var productId = $('#productId').val();
+        var productName = $('#productName').val();
+        var productPrice = $('#productPrice').val();
+        var productSKU = $('#productSKU').val();
+        var imageFile = $('#imageFile')[0].files[0];
+
+        // Create FormData object to send file
+        var formData = new FormData();
+        formData.append('productId', productId);
+        formData.append('productName', productName);
+        formData.append('productPrice', productPrice);
+        formData.append('productSKU', productSKU);
+        formData.append('imageFile', imageFile);
+
+        // Convert formData to query string
+        var searchParams = new URLSearchParams(formData);
+
+        // Redirect to updateProduct route with query string
+        window.location.href = '/updateProduct/' + productId + '?' + searchParams.toString();
+    });
+});
+
+    </script>
+    <%- include('../home'); %>
+</body>
+</html>
