@@ -124,24 +124,42 @@ async function updateproduct(productId,productData) {
         'Content-Type': 'application/json'
       }
     };
-  
+    console.log(response);
 
     try {
       const response = await axios(options);
-      console.log(response.data);
-      return response;
+      return response.data;
     } catch(error) {
       console.log(error);
     }
+    
      
   } catch (error) {
     console.log(error);
   }
 }
 
+async function deleteproduct(productId) {
+  try {
+    const accessToken = await getAccessToken();
+   
+    const response  = await axios.delete(`https://www.wixapis.com/stores/v1/products/${productId}`,{
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+  
+}
 module.exports = {
     getProduct : getProduct,
     getOrder : getOrder,
     collectionResponse : getCollection,
-    update: updateproduct
+    update_platform_Product: updateproduct,
+    delete_platform_Product: deleteproduct,
 }

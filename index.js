@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 // const multer = require('multer');
 // const path = require('path');
 const port = 4000
-const { router, syncRouter, updateProduct } = require('./routes/product');
+const { router, syncRouter, updateProduct ,deleteProduct } = require('./routes/product');
 const { order, syncorderRouter } = require('./routes/order');
 const { collection, collectionSync } = require('./routes/collection');
 const bodyParser = require('body-parser');
@@ -56,6 +56,7 @@ app.get('/', (req, res) => {
 app.use('/product', router);
 app.use('/sync', syncRouter);
 app.use('/updateProduct', updateProduct);
+app.use('/deleteProduct', deleteProduct);
 
 app.use('/order', order);
 app.use('/syncOrder', syncorderRouter);
