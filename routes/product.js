@@ -1,5 +1,5 @@
 const express = require('express');
-const { getProduct,update_platform_Product ,delete_platform_Product  } = require('../middleware/API');
+const { getProduct,update_platform_Product ,delete_platform_Product ,createPlatformProduct  } = require('../middleware/API');
 const Product = require('../models/product');
 // const flash = require('express-flash');
 // const session = require('express-session');
@@ -9,6 +9,7 @@ const router = express.Router();
 const syncRouter = express.Router();
 const updateProduct = express.Router();
 const deleteProduct =  express.Router();
+const createProduct = express.Router();
 
 // const secretKey = crypto.randomBytes(32).toString('hex');
 
@@ -90,6 +91,42 @@ syncRouter.get('', async (req, res) => {
     }
     
 });
+createProduct.get('', async (req,res) =>{
+    try {
+        console.log(req.query);
+        if(Object.keys(req.query).length > 0) {
+            var product_data = { "product" : {
+                "name" : req.query.productName,
+                "productType": "physical",
+                "priceData": {
+                    "price": req.query.productPrice
+                },
+                "description": "nice summer t-shirt",
+                "sku": req.query.productSKU,
+            }
+         }
+         const productResponse = await createPlatformProduct(product_data);
+         console.log(productResponse.product);
+         const product =  new Product({
+            productId: productResponse.product ? productResponse.product.id : '',
+            productName: productResponse.product ? productResponse.product.name : '',
+            SKU: productResponse.product ? productResponse.product.sku : '',
+            price: productResponse.product ? productResponse.product.priceData.discountedPrice : '',
+            images: productResponse.media && productResponse.media.mainMedia && productResponse.media.mainMedia.image ? productResponse.media.mainMedia.image.url : '',
+         });
+
+         try {
+            await product.save();
+            console.log('Product Saved Successfully');
+         } catch (error) {
+            res.status(500).json({error:error.message});
+         }
+        }
+        return res.render('products/create');
+    } catch(error) {
+        res.status(500).json({ error: error.message });
+    }
+})
 updateProduct.get('/:id', async (req,res) =>{
     try { 
             
@@ -157,4 +194,5 @@ module.exports ={
     syncRouter: syncRouter, 
     updateProduct: updateProduct,
     deleteProduct: deleteProduct,
+    addProduct: createProduct,
 } 

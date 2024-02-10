@@ -112,13 +112,39 @@ async function getCollection()
     }
 } 
 
+async function createProduct(productData) {
+  try {
+    const accessToken = await getAccessToken(); // Assume getAccessToken() function is defined elsewhere
+    console.log(productData);
+    const options = {
+      method: 'POST',
+      url: `https://www.wixapis.com/stores/v1/products`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: productData,
+    };
+
+    const response = await axios(options);
+    console.log('Product created:', response.data);
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      console.error('Error creating product:', error.response.data);
+    } else {
+      console.error('Error creating product:', error.message);
+    }
+    throw error;
+  }
+}
 async function updateproduct(productId,productData) {
   try {
      const accessToken = await getAccessToken();
      const options = {
       method: 'PATCH',
       url: `https://www.wixapis.com/stores/v1/products/${productId}`,
-      data: productData, // Assuming productData is a valid JSON object
+      data: productData, 
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
@@ -142,7 +168,6 @@ async function updateproduct(productId,productData) {
 async function deleteproduct(productId) {
   try {
     const accessToken = await getAccessToken();
-   
     const response  = await axios.delete(`https://www.wixapis.com/stores/v1/products/${productId}`,{
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -162,4 +187,5 @@ module.exports = {
     collectionResponse : getCollection,
     update_platform_Product: updateproduct,
     delete_platform_Product: deleteproduct,
+    createPlatformProduct: createProduct
 }

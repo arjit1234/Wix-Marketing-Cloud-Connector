@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Create Form</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Product Create</h1>
+        <form id="productForm">
+            <div class="mb-3">
+                <label for="productName" class="form-label">Product Name</label>
+                <input type="text" class="form-control  productName"  placeholder="Enter product name">
+            </div>
+            <div class="mb-3">
+                <label for="productPrice" class="form-label">Price</label>
+                <input type="number" class="form-control productPrice"   placeholder="Enter price">
+            </div>
+            <div class="mb-3">
+                <label for="productSKU" class="form-label">SKU</label>
+                <input type="text" class="form-control productSKU"   placeholder="Enter SKU">
+            </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Image</label>
+                <input type="file" class="form-control imageFile">
+            </div>
+            <button type="submit" class="btn btn-primary" id="createproductBtn">Create Product</button>
+        </form>
+    </div>
+    <%- include('../home'); %>
+</body>
+</html>
