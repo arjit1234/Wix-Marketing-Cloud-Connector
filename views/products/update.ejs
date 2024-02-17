@@ -25,6 +25,11 @@
                 <input type="text" class="form-control" id="productSKU" value="<%= productData.SKU %>" placeholder="Enter SKU">
             </div>
             <div class="mb-3">
+                <label for="productDescription" class="form-label">Description</label>
+                <textarea style="color: black;" class="form-control" id="productDescription" value="<%= productData.description %>" color=""><%= productData.description %></textarea>
+                <!-- <input type="text" class="form-control"  id="productDescription" value="<%= productData.description %>"> -->
+            </div>
+            <div class="mb-3">
                 <label for="imageFile" class="form-label">Image</label>
                 <input type="file" class="form-control" id="imageFile">
             </div>

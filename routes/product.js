@@ -59,14 +59,13 @@ syncRouter.get('', async (req, res) => {
             try {
                 // Find existing product by productId
                 let existingProduct = await Product.findOne({ productId: productData.id });
-        
                 if (existingProduct) {
                     // Update existing product
                     existingProduct.productName = productData.name;
                     // existingProduct.SKU = productData.sku;
                     existingProduct.price = productData.price.discountedPrice;
+                    existingProduct.description = productData.description ? productData.description : '';
                     existingProduct.images = productData.media && productData.media.mainMedia && productData.media.mainMedia.image ? productData.media.mainMedia.image.url : '';
-
                     await existingProduct.save();
                     console.log(`Product with productId ${productData.id} is updated`);
                 } else {
@@ -75,9 +74,10 @@ syncRouter.get('', async (req, res) => {
                         productId: productData.id,
                         productName: productData.name,
                         SKU: productData.sku,
+                        description: productData.description ? productData.description : '',
                         price: productData.price.discountedPrice,
                         stock: productData.stock.inStock,
-                        ...(productData.quantity && { quantity: productData.quantity }),
+                        quantity: productData.stock.quantity ? productData.stock.quantity : null,
                         images: productData.media && productData.media.mainMedia && productData.media.mainMedia.image ? productData.media.mainMedia.image.url : '',
                     });
     
@@ -135,38 +135,37 @@ createProduct.get('', async (req,res) =>{
     }
 })
 updateProduct.get('/:id', async (req,res) =>{
-    try { 
-            
+    try {  
             const prodId= req.params.id;
-            const product_data ={ "product" : {
+            const productData = await Product.findOne({ productId : prodId });
+            if(Object.keys(req.query).length > 0) {
+                    const product_data ={ "product" : {
                         "name" : req.query.productName,
                         "productType": "physical",
                         "priceData": {
-                         "price": req.query.productPrice
-                       },
-                       "description": "nice summer t-shirt",
+                        "price": req.query.productPrice
+                    },
+                    "description": req.query.productDescription,
                         "sku": req.query.productSKU,
                     }
                 }
 
-            const update_response = await update_platform_Product(prodId,product_data);
-            console.log(update_response);
-            const productData = await Product.findOne({ productId : prodId });
+                const update_response = await update_platform_Product(prodId,product_data);
 
-            if (productData) {
-                productData.productName = update_response.product ?  update_response.product.name : null;
-                productData.SKU = update_response.product ? update_response.product.sku : null;
-                productData.price = update_response.product ? update_response.product.price.discountedPrice : null;
-
-                try {
-                     await productData.save()
-                     console.log(`Product with productId ${productData.id} is updated`);
-                } catch (error) {
-                    console.log(`Product with productId ${productData.id} is not updated`);
+                if (productData) {
+                    productData.productName = update_response.product ?  update_response.product.name : null;
+                    productData.SKU = update_response.product ? update_response.product.sku : null;
+                    productData.price = update_response.product ? update_response.product.price.discountedPrice : null;
+                    productData.description = update_response.product ? update_response.product.description : '';
+                    try {
+                        await productData.save()
+                        console.log(`Product with productId ${productData.id} is updated`);
+                    } catch (error) {
+                        console.log(`Product with productId ${productData.id} is not updated`);
+                    }
                 }
-            }
-        
-            return res.render('products/update', {productData});
+        }
+        return res.render('products/update', {productData});
     } catch (error) {
         console.log(error)
     }
