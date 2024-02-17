@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-// const multer = require('multer');
-// const path = require('path');
-const port = 4000
+const port = 3000;
 const { router, syncRouter, updateProduct ,deleteProduct, addProduct } = require('./routes/product');
 const { order, syncorderRouter } = require('./routes/order');
 const { collection, collectionSync } = require('./routes/collection');
@@ -15,7 +13,7 @@ const path  = require('path');
 app.use(bodyParser.json());
 
 // Multer middleware (for multipart/form-data)
-const upload = multer({ dest: 'uploads/' });
+// const upload = multer({ dest: 'uploads/' });
 
 const uri = "mongodb://localhost:27017";
 
@@ -46,11 +44,17 @@ app.get('/', (req, res) => {
   res.render('home', { name: 'Akashdeep' });
 });
 
-// Handle POST request with file uploads
-// app.post('/upload', upload.single('image'), (req, res) => {
-//   // Process the uploaded file here
-//   res.send('File uploaded successfully');
-// });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb){
+    cb(null, 'public/images/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.filename + '-' + Date.now() + path.extname(file.originalname))
+  }
+});
+
+const upload = multer({ storage: storage });
+app.post('/addProduct', upload.single('imageFile'), addProduct);
 
 // Use routers for different modules
 app.use('/product', router);

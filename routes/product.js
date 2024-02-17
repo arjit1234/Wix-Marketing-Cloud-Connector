@@ -27,18 +27,23 @@ const createProduct = express.Router();
 // }));
 // router.use(flash());
 // Define route for /products
-router.get('', async(req, res) => {
+router.get('', async (req, res) => {
+    const itemsPerPage = 50;
+    const page = parseInt(req.query.page) || 1; // Current page number
+     // Number of items per page
     try {
-        const products = await Product.find({});
+        const totalProducts = await Product.countDocuments({});
+        const totalPages = Math.ceil(totalProducts / itemsPerPage);
+        const products = await Product.find({})
+            .skip((page - 1) * itemsPerPage)
+            .limit(itemsPerPage);
 
-        // Log products (for debugging)
-        // Render products
-        res.render('products/products', { products });
+        res.render('products/products', { products, currentPage: page, totalPages, itemsPerPage });
     } catch (err) {
-        // Handle errors
         res.status(500).json({ error: err.message });
     }
 });
+
 
 // Define Route for Sync Product
 syncRouter.get('', async (req, res) => {
@@ -54,14 +59,14 @@ syncRouter.get('', async (req, res) => {
             try {
                 // Find existing product by productId
                 let existingProduct = await Product.findOne({ productId: productData.id });
-    
+        
                 if (existingProduct) {
                     // Update existing product
                     existingProduct.productName = productData.name;
                     // existingProduct.SKU = productData.sku;
                     existingProduct.price = productData.price.discountedPrice;
                     existingProduct.images = productData.media && productData.media.mainMedia && productData.media.mainMedia.image ? productData.media.mainMedia.image.url : '';
-    
+
                     await existingProduct.save();
                     console.log(`Product with productId ${productData.id} is updated`);
                 } else {
@@ -71,6 +76,8 @@ syncRouter.get('', async (req, res) => {
                         productName: productData.name,
                         SKU: productData.sku,
                         price: productData.price.discountedPrice,
+                        stock: productData.stock.inStock,
+                        ...(productData.quantity && { quantity: productData.quantity }),
                         images: productData.media && productData.media.mainMedia && productData.media.mainMedia.image ? productData.media.mainMedia.image.url : '',
                     });
     
@@ -93,7 +100,7 @@ syncRouter.get('', async (req, res) => {
 });
 createProduct.get('', async (req,res) =>{
     try {
-        console.log(req.query);
+        console.log(req.query.productDescription);
         if(Object.keys(req.query).length > 0) {
             var product_data = { "product" : {
                 "name" : req.query.productName,
@@ -101,7 +108,7 @@ createProduct.get('', async (req,res) =>{
                 "priceData": {
                     "price": req.query.productPrice
                 },
-                "description": "nice summer t-shirt",
+                "description": req.query.productDescription,
                 "sku": req.query.productSKU,
             }
          }

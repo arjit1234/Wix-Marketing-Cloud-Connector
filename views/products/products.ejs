@@ -32,6 +32,7 @@
         </div>
     </div>
   </div>          
+
   <table class="table">
     <thead>
       <tr>
@@ -40,25 +41,41 @@
         <th>Name</th>
         <th>SKU</th>
         <th>Price</th>
+        <th>STOCK</th>
+        <th>Qantity</th>
         <th>Image</th>
         <th colspan="2"></th>
       </tr>
     </thead>
     <tbody>
-      <% products.forEach(product => { %>
+      <% for (let i = (currentPage - 1) * itemsPerPage; i < currentPage * itemsPerPage && i < products.length; i++) { %>
+        <% let product = products[i]; %>
         <tr>
             <td><input type="checkbox" class="product-checkbox" data-product-id="<%= product.productId %>"></td>
             <td class="product-id"><%= product.productId %></td>
             <td><%= product.productName %></td>
             <td><%= product.SKU %></td>
             <td><%= product.price %></td>
+            <td><%= product.stock ? 'IN STOCK' : 'OUT OF STOCK' %></td>
+            <td><%= product.quantity %></td>
             <td><img src="<%= product.images %>" class="img-fluid" style="max-width: 100px; max-height: 100px;"></td>
             <td><a href="/updateProduct/<%= product.productId %>"><button type="button" class="btn btn-secondary edit-product"><i class="far fa-edit"></i></button></a></td>
             <td><a href="/deleteProduct/<%= product.productId %>"><button type="button" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button></a></td>
           </tr>
-      <% }); %>
+      <% } %>
     </tbody>
   </table>
+  
+  <!-- Pagination -->
+  <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+          <a class="page-link" href="/products?page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </nav>
 </div>
 <%- include('../home'); %>
 
