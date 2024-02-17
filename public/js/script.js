@@ -47,6 +47,7 @@ $(document).ready(function() {
             var productName = $('#productName').val();
             var productPrice = $('#productPrice').val();
             var productSKU = $('#productSKU').val();
+            var productDescription = $('#productDescription').val();
             var imageFile = $('#imageFile')[0].files[0];
     
             // Create FormData object to send file
@@ -55,6 +56,7 @@ $(document).ready(function() {
             formData.append('productName', productName);
             formData.append('productPrice', productPrice);
             formData.append('productSKU', productSKU);
+            formData.append('productDescription',productDescription);
             formData.append('imageFile', imageFile);
     
             // Convert formData to query string
