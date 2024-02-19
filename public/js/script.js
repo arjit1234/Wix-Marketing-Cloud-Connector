@@ -74,8 +74,10 @@ $(document).ready(function() {
             const productPrice = $('.productPrice').val();
             const productSKU = $('.productSKU').val();
             const productDescription = $('.productDescription').val();
+            const trackInventory = $('#toggleInventory').prop('checked') ? $('#inventoryNumber').val() : null;
+            const inventoryType = $('#toggleInventory').prop('checked') ? $('#inventoryType').val() : null;
             const imageFile = $('.imageFile')[0].files[0];
-            console.log(productId,productName,productPrice,productSKU,imageFile);
+            
             // Create FormData object to send file
             const formData = new FormData();
             formData.append('productId', productId);
@@ -83,6 +85,8 @@ $(document).ready(function() {
             formData.append('productPrice', productPrice);
             formData.append('productSKU', productSKU);
             formData.append('productDescription', productDescription)
+            formData.append('trackInventory',trackInventory);
+            formData.append('inventoryType',inventoryType);
             formData.append('imageFile', imageFile);
     
             // Convert formData to query string
@@ -93,14 +97,22 @@ $(document).ready(function() {
     
     
         });
+        $('#toggleInventory').change(function(){
+          if($(this).prop('checked')){
+             $('#inventoryType').closest('.mb-3').hide();
+             $('#inventoryInput').show();
+          } else {
+              $('#inventoryType').closest('.mb-3').show();
+              $('#inventoryInput').hide();
+          }
+      });
+
+      $('#inventoryType').change(function(){
+          if($(this).val() === 'numberInput' && $('#toggleInventory').prop('checked')){
+              $('#inventoryInput').show();
+          } else {
+              $('#inventoryInput').hide();
+          }
+      });
 
    })
-
-// $(document).ready(function() {
-//     // Handle form submission
-    
-// });
-
-// $(document).ready(function() {
-    
-// })

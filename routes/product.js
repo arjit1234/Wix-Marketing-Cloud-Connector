@@ -100,7 +100,7 @@ syncRouter.get('', async (req, res) => {
 });
 createProduct.get('', async (req,res) =>{
     try {
-        console.log(req.query.productDescription);
+        console.log(req.query,"hello");
         if(Object.keys(req.query).length > 0) {
             var product_data = { "product" : {
                 "name" : req.query.productName,
