@@ -28,7 +28,7 @@ const createProduct = express.Router();
 // router.use(flash());
 // Define route for /products
 router.get('', async (req, res) => {
-    const itemsPerPage = 50;
+    const itemsPerPage = 10;
     const page = parseInt(req.query.page) || 1; // Current page number
      // Number of items per page
     try {
@@ -100,7 +100,6 @@ syncRouter.get('', async (req, res) => {
 });
 createProduct.get('', async (req,res) =>{
     try {
-        console.log(req.query,"hello");
         if(Object.keys(req.query).length > 0) {
             var product_data = { "product" : {
                 "name" : req.query.productName,
@@ -110,6 +109,12 @@ createProduct.get('', async (req,res) =>{
                 },
                 "description": req.query.productDescription,
                 "sku": req.query.productSKU,
+                "stock" : {
+                    "trackInventory" : req.query.trackInventory !== 'null' ? true : false,
+                    "quantity": req.query.trackInventory !== 'null' ? req.query.trackInventory : "0",
+                    "inStock": req.query.inventoryType == 'IN_STOCK' ? true : false,
+                    "inventoryStatus": req.query.inventoryType, 
+                }
             }
          }
          const productResponse = await createPlatformProduct(product_data);
@@ -138,6 +143,7 @@ updateProduct.get('/:id', async (req,res) =>{
     try {  
             const prodId= req.params.id;
             const productData = await Product.findOne({ productId : prodId });
+        
             if(Object.keys(req.query).length > 0) {
                     const product_data ={ "product" : {
                         "name" : req.query.productName,
@@ -149,7 +155,6 @@ updateProduct.get('/:id', async (req,res) =>{
                         "sku": req.query.productSKU,
                     }
                 }
-
                 const update_response = await update_platform_Product(prodId,product_data);
 
                 if (productData) {

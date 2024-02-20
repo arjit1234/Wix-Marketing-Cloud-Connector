@@ -75,7 +75,7 @@ $(document).ready(function() {
             const productSKU = $('.productSKU').val();
             const productDescription = $('.productDescription').val();
             const trackInventory = $('#toggleInventory').prop('checked') ? $('#inventoryNumber').val() : null;
-            const inventoryType = $('#toggleInventory').prop('checked') ? $('#inventoryType').val() : null;
+            const inventoryType =  $('#inventoryType').val();
             const imageFile = $('.imageFile')[0].files[0];
             
             // Create FormData object to send file

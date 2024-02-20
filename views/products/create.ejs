@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Create Form</title>
-    <!-- Add jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         .toggle-label {
             margin-right: 1rem;
@@ -53,7 +51,7 @@
         <form id="productForm">
             <div class="mb-3">
                 <label for="productName" class="form-label">Product Name</label>
-                <input type="text" class="form-control productName"  placeholder="Enter product name">
+                <input type="text" class="form-control  productName"  placeholder="Enter product name">
             </div>
             <div class="mb-3">
                 <label for="productPrice" class="form-label">Price</label>
@@ -77,18 +75,21 @@
             <div class="mb-3">
                 <label for="inventoryType" class="form-label inventory">Status</label>
                 <select class="form-control" id="inventoryType" style="width: 20%;">
-                    <option value="inStock">In Stock</option>
-                    <option value="outOfStock">Out of Stock</option>
+                    <option value="IN_STOCK">In Stock</option>
+                    <option value="OUT_OF_STOCK">Out of Stock</option>
                 </select>
             </div>
             <div class="mb-3" id="inventoryInput" style="display:none;">
                 <label for="inventoryNumber" class="form-label toggle-label">Inventory</label>
                 <input type="number" class="form-control" id="inventoryNumber" style="width: 20%;">
             </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Image</label>
+                <input type="file" class="form-control imageFile">
+            </div>
             <button type="submit" class="btn btn-primary" id="createproductBtn">Create Product</button>
         </form>
     </div>
-    <!-- Include other scripts or styles if needed -->
     <%- include('../home'); %>
 </body>
 </html>
